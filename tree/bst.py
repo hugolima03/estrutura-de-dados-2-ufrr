@@ -96,7 +96,7 @@ def findMin(root):
         return None
     while root.left != None:
         root = root.left
-    return root.value
+    return root
 
 
 def findMax(root):
@@ -104,7 +104,7 @@ def findMax(root):
         return None
     while root.right != None:
         root = root.right
-    return root.value
+    return root
 
 
 def findHeight(root):
@@ -117,6 +117,34 @@ def findHeight(root):
 
 # Percurso em Level (BFS)
 q = queue.Queue()
+
+
+def deleteNode(root, value):
+    if root is None:
+        return None
+    elif value < root.value:
+        root.left = deleteNode(root.left, value)
+    elif value > root.value:
+        root.right = deleteNode(root.right, value)
+    else:  # Nó foi encontrado
+        # Caso 1: Nó folha
+        if root.left and root.right is None:
+            root = None
+        # Caso 2: Nó tem um filho
+        elif root.left is None:
+            temp = root
+            root = root.right
+            temp = None
+        elif root.right is None:
+            temp = root
+            root = root.left
+            temp = None
+        # Caso 3: Nó tem dois filhos
+        else:
+            minNode = findMin(root.right)
+            root.value = minNode.value
+            root.right = deleteNode(root.right, minNode.value)
+    return root
 
 
 def levelOrder(root):
@@ -145,8 +173,11 @@ root = insert(root, 38)
 root = insert(root, 51)
 
 printTree(root)
-print('min: ', findMin(root))
-print('max: ', findMax(root))
+print('min: ', findMin(root).value)
+print('max: ', findMax(root).value)
 print('height: ', findHeight(root))
-deletion(root, 35)
-levelOrder(root)
+# deletion(root, 35)
+deleteNode(root, 10)
+print('------')
+# levelOrder(root)
+printTree(root)
