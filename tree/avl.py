@@ -15,9 +15,10 @@ def insert(root, value):
             root.left = insert(root.left, value)
         elif value > root.value:
             root.right = insert(root.right, value)
-    root.right = max(findHeight(root.left), findHeight(root.right)) + 1
+    root.height = max(findHeight(root.left), findHeight(root.right)) + 1
 
     balanceFactor = getBalance(root)
+
     if (balanceFactor < -1):
       if (value > root.right.value): #Rotação simples Esquerda
         return leftRotate(root)
@@ -102,8 +103,15 @@ def printTree(root, level=0):
 
 # FB = H(t.left) - H(t.right)
 
+def getHeight(root):
+    if root is None:
+        return -1
+    return root.height
+
 def getBalance(root):
-  return findHeight(root.left) - findHeight(root.right)
+  if root is None:
+    return 0
+  return getHeight(root.left) - getHeight(root.right)
 
 def findMin(root):
     if root is None:
@@ -193,7 +201,7 @@ root = None
 root = insert(root, 1)
 root = insert(root, 2)
 root = insert(root, 3)
-root = insert(root, 7)
+root = insert(root, 4)
 
 printTree(root)
 # print('min: ', findMin(root).value)
